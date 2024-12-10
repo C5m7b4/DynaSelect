@@ -1,3 +1,7 @@
+# DynaSelect
+This is a small single select drop down component for react that is very simple to use.
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
