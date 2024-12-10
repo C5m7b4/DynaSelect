@@ -43,11 +43,12 @@ const DynaSelect = <T,>({
         parent.addEventListener("mousedown", handleClickOutside);
       }
     }
+    const cmp = componentRef;
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      if (componentRef.current) {
-        const parent = componentRef.current.parentElement;
+      if (cmp.current) {
+        const parent = cmp.current.parentElement;
         if (parent) {
           parent.removeEventListener("mousedown", handleClickOutside);
         }
