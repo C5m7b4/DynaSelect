@@ -64,8 +64,12 @@ const DynaSelect = <T,>({
     }
   };
 
+  const handleSelect = (selection: T) => {
+    onSelect(selection[valueKey] as string);
+  };
+
   return (
-    <div ref={componentRef}>
+    <div ref={componentRef} className="w-full">
       <div className="flex flex-col mt-2">
         <label htmlFor="search" className="text-sm font-medium mb-2">
           {label}
@@ -88,17 +92,19 @@ const DynaSelect = <T,>({
             ref={listRef}
             data-display="closed"
             className="absolute w-full mt-2 p-2 py-2
-            max-h-[350px] overflow-y-scroll
+            max-h-[200px] overflow-y-scroll
             z-20 rounded-b-xl shadow-lg
             data-[display=open]:animate-appear
             data-[display=closed]:animate-dissapear"
           >
             {filteredData.map((d, idx) => (
-              <div key={`d-${idx}`}>
-                <div className="grid grid-cols-[35px_1fr] min-h-[35px]">
-                  <div className="flex items-center">
-                    {d[displayKey] as string}
-                  </div>
+              <div
+                key={`d-${idx}`}
+                className="hover:bg-slate-400 transition-all duration-500 cursor-pointer"
+                onClick={() => handleSelect(d)}
+              >
+                <div className="flex items-center min-h-[35px]">
+                  <div className="">{d[displayKey] as string}</div>
                 </div>
               </div>
             ))}
