@@ -17,7 +17,7 @@ const DynaSelect = <T,>({
   onSelect,
 }: DynaSelectProps<T>) => {
   const [query, setQuery] = useState("");
-  const [filteredData, setFileteredData] = useState<T[]>([]);
+  const [filteredData, setFilteredData] = useState<T[]>([]);
 
   const listRef = useRef<HTMLDivElement>(null);
   const componentRef = useRef<HTMLDivElement>(null);
@@ -35,7 +35,7 @@ const DynaSelect = <T,>({
 
   useEffect(() => {
     if (!data || data.length === 0) return;
-    setFileteredData(data);
+    setFilteredData(data);
 
     if (componentRef.current) {
       const parent = componentRef.current.parentElement;
@@ -66,6 +66,26 @@ const DynaSelect = <T,>({
 
   const handleSelect = (selection: T) => {
     onSelect(selection[valueKey] as string);
+    setQuery(selection[displayKey] as string);
+
+    if (listRef.current) {
+      listRef.current.setAttribute("data-display", "closed");
+    }
+  };
+
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    if (e.target.value.length === 0) {
+      setFilteredData(data);
+    } else {
+      const filtered = data.filter((r) =>
+        (r[displayKey] as string)
+          .toString()
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
   };
 
   return (
@@ -77,10 +97,13 @@ const DynaSelect = <T,>({
         <div className="relative">
           <div ref={triggerRef} onClick={handleTriggerClick}>
             <input
+              value={query}
+              onFocus={(e) => e.target.select()}
+              onChange={handleQueryChange}
               type="text"
               name="search"
               autoComplete="off"
-              className=" flex w-full flex-1 rounded-lg
+              className=" flex px-2 text-black w-full flex-1 rounded-lg
                     focus:border-2 focus:border-purple-400
                     focus:ring-0"
             />
