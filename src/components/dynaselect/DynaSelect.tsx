@@ -28,6 +28,16 @@ const DynaSelect = <T,>({
     setFileteredData(data);
   }, [data]);
 
+  const handleTriggerClick = () => {
+    if (listRef.current) {
+      const currentStatus = listRef.current.getAttribute("data-display");
+      listRef.current.setAttribute(
+        "data-display",
+        currentStatus === "open" ? "closed" : "open"
+      );
+    }
+  };
+
   return (
     <div ref={componentRef}>
       <div className="flex flex-col mt-2">
@@ -35,7 +45,7 @@ const DynaSelect = <T,>({
           {label}
         </label>
         <div className="relative">
-          <div ref={triggerRef}>
+          <div ref={triggerRef} onClick={handleTriggerClick}>
             <input
               type="text"
               name="search"
@@ -48,7 +58,15 @@ const DynaSelect = <T,>({
               <ChevronUpDown className="cursor-pointer" />
             </div>
           </div>
-          <div ref={listRef}>
+          <div
+            ref={listRef}
+            data-display="closed"
+            className="absolute w-full mt-2 p-2 py-2
+            max-h-[350px] overflow-y-scroll
+            z-20 rounded-b-xl shadow-lg
+            data-[display=open]:animate-appear
+            data-[display=closed]:animate-dissapear"
+          >
             {filteredData.map((d, idx) => (
               <div key={`d-${idx}`}>
                 <div className="grid grid-cols-[35px_1fr] min-h-[35px]">
