@@ -36,17 +36,19 @@ const DynaSelect = <T,>({
   useEffect(() => {
     if (!data || data.length === 0) return;
     setFilteredData(data);
-
+    document.addEventListener("mousedown", handleClickOutside);
     if (componentRef.current) {
       const parent = componentRef.current.parentElement;
       if (parent) {
         parent.addEventListener("mousedown", handleClickOutside);
       }
     }
+    const cmp = componentRef;
 
     return () => {
-      if (componentRef.current) {
-        const parent = componentRef.current.parentElement;
+      document.removeEventListener("mousedown", handleClickOutside);
+      if (cmp.current) {
+        const parent = cmp.current.parentElement;
         if (parent) {
           parent.removeEventListener("mousedown", handleClickOutside);
         }
