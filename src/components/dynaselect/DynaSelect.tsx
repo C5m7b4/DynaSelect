@@ -23,9 +23,35 @@ const DynaSelect = <T,>({
   const componentRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
 
+  const handleClickOutside = (e: MouseEvent) => {
+    if (listRef.current && triggerRef.current) {
+      if (!listRef.current.contains(e.target as Node)) {
+        if (!triggerRef.current.contains(e.target as Node)) {
+          listRef.current.setAttribute("data-display", "closed");
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (!data || data.length === 0) return;
     setFileteredData(data);
+
+    if (componentRef.current) {
+      const parent = componentRef.current.parentElement;
+      if (parent) {
+        parent.addEventListener("mousedown", handleClickOutside);
+      }
+    }
+
+    return () => {
+      if (componentRef.current) {
+        const parent = componentRef.current.parentElement;
+        if (parent) {
+          parent.removeEventListener("mousedown", handleClickOutside);
+        }
+      }
+    };
   }, [data]);
 
   const handleTriggerClick = () => {
