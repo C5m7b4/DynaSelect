@@ -1,14 +1,41 @@
 import ChevronUpDown from "../../svgs/ChevronUpDown";
+import { useState, useEffect, useRef } from "react";
 
-const DynaSelect = () => {
+interface DynaSelectProps<T> {
+  data: T[];
+  valueKey: keyof T;
+  displayKey: keyof T;
+  label: string;
+  onSelect: (selection: string) => void;
+}
+
+const DynaSelect = <T,>({
+  data,
+  valueKey,
+  displayKey,
+  label,
+  onSelect,
+}: DynaSelectProps<T>) => {
+  const [query, setQuery] = useState("");
+  const [filteredData, setFileteredData] = useState<T[]>([]);
+
+  const listRef = useRef<HTMLDivElement>(null);
+  const componentRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!data || data.length === 0) return;
+    setFileteredData(data);
+  }, [data]);
+
   return (
-    <div className="flex flex-col mt-2">
-      <div>
+    <div ref={componentRef}>
+      <div className="flex flex-col mt-2">
         <label htmlFor="search" className="text-sm font-medium mb-2">
-          my label
+          {label}
         </label>
         <div className="relative">
-          <div>
+          <div ref={triggerRef}>
             <input
               type="text"
               name="search"
@@ -21,7 +48,17 @@ const DynaSelect = () => {
               <ChevronUpDown className="cursor-pointer" />
             </div>
           </div>
-          <div>my list</div>
+          <div ref={listRef}>
+            {filteredData.map((d, idx) => (
+              <div key={`d-${idx}`}>
+                <div className="grid grid-cols-[35px_1fr] min-h-[35px]">
+                  <div className="flex items-center">
+                    {d[displayKey] as string}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
